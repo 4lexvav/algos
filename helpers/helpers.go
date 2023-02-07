@@ -36,3 +36,9 @@ func (h *maxHeap) Pop() interface{} {
 	*h = (*h)[:len(*h)-1]
 	return col
 }
+
+func checkError(err error) {
+	if err != nil {
+		panic(err)
+	}
+}
