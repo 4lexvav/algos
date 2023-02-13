@@ -1,4 +1,4 @@
-package main
+package asteriod
 
 import (
 	"bufio"
@@ -8,6 +8,8 @@ import (
 	"reflect"
 	"strconv"
 	"testing"
+
+	"github.com/4lexvav/algo/helpers"
 )
 
 func TestAsteroidCollision(t *testing.T) {
@@ -62,44 +64,44 @@ func TestAsteroidCollision(t *testing.T) {
 		{
 			"1",
 			"",
-			getAsteroidsFromJSONFile("./cases/case1.json"),
+			getAsteroidsFromJSONFile("../cases/case1.json"),
 			[]int{5, 10},
 		},
 		{
 			"2",
 			"",
-			getAsteroidsFromJSONFile("cases/case2.json"),
+			getAsteroidsFromJSONFile("../cases/case2.json"),
 			[]int{},
 		},
 		{
 			"3",
 			"",
-			getAsteroidsFromJSONFile("cases/case3.json"),
+			getAsteroidsFromJSONFile("../cases/case3.json"),
 			[]int{10},
 		},
 		{
 			"4",
 			"",
-			getAsteroidsFromTXTFile("cases/case1.txt"),
+			getAsteroidsFromTXTFile("../cases/case1.txt"),
 			[]int{5, 10},
 		},
 		{
 			"5",
 			"",
-			getAsteroidsFromTXTFile("cases/case2.txt"),
+			getAsteroidsFromTXTFile("../cases/case2.txt"),
 			[]int{},
 		},
 		{
 			"6",
 			"",
-			getAsteroidsFromTXTFile("cases/case3.txt"),
+			getAsteroidsFromTXTFile("../cases/case3.txt"),
 			[]int{10},
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result := asteroidCollision(tt.asteroids)
+			result := AsteroidCollision(tt.asteroids)
 			if tt.outputFile != "" {
 				saveResult(result, tt.outputFile)
 			}
@@ -112,29 +114,29 @@ func TestAsteroidCollision(t *testing.T) {
 
 func getAsteroidsFromJSONFile(file string) []int {
 	f, err := os.Open(file)
-	checkError(err)
+	helpers.CheckError(err)
 	defer f.Close()
 
 	data, err := io.ReadAll(f)
-	checkError(err)
+	helpers.CheckError(err)
 
 	var asteroids []int
 	err = json.Unmarshal(data, &asteroids)
-	checkError(err)
+	helpers.CheckError(err)
 
 	return asteroids
 }
 
 func getAsteroidsFromTXTFile(file string) []int {
 	f, err := os.Open(file)
-	checkError(err)
+	helpers.CheckError(err)
 	defer f.Close()
 
 	var asteroids []int
 	scanner := bufio.NewScanner(f)
 	for scanner.Scan() {
 		asteroid, err := strconv.Atoi(scanner.Text())
-		checkError(err)
+		helpers.CheckError(err)
 
 		asteroids = append(asteroids, asteroid)
 	}
@@ -144,15 +146,15 @@ func getAsteroidsFromTXTFile(file string) []int {
 
 func saveResult(result []int, file string) {
 	out, err := os.Create(file)
-	checkError(err)
+	helpers.CheckError(err)
 	defer out.Close()
 
 	data, err := json.Marshal(result)
-	checkError(err)
+	helpers.CheckError(err)
 
 	writer := bufio.NewWriter(out)
 	writer.Write(data)
 	//writer.WriteString("\n") // write new line
 	//writer.Write(data) // write next line
-	checkError(writer.Flush())
+	helpers.CheckError(writer.Flush())
 }
